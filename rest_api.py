@@ -1,4 +1,4 @@
-# LongandShort.io
+# longandshort.io
 # Implementation of https://github.com/bybit-exchange/bybit-official-api-docs/blob/master/en/README.md
 import requests
 import os
