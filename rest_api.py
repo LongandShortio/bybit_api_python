@@ -1,4 +1,4 @@
-# longandshort.io
+# LongandShort.io
 # Implementation of https://github.com/bybit-exchange/bybit-official-api-docs/blob/master/en/README.md
 import requests
 import os
@@ -6,7 +6,10 @@ import websocket,time
 import hmac
 import hashlib
 import json
-import random
+import logging
+
+logger.handlers = []
+logging.basicConfig(filename=f"{os.getcwd()}/rest_api.log",format='%(asctime)s - %(process)d-%(levelname)s - %(message)s', datefmt='%d-%b-%y %H:%M:%S', level=logging.DEBUG)
 
 class Account:
     def __init__(self, api_key, secret, leverage, url="https://api-testnet.bybit.com"):
@@ -15,12 +18,13 @@ class Account:
         self.secret = secret
         self.leverage=leverage
         self.url=url
-
+        logging.info(f'Bybit session initiated : API Key : {self.api_key}, Leverage : {self.leverage}, URL : {self.url}')
 
     def get_signature(self,param_str):
         return str(hmac.new(bytes(self.secret, "utf-8"), bytes(param_str, "utf-8"), digestmod="sha256").hexdigest())
 
     def auth(self):
+        logger.info("auth")
         timestamp=int(round(time.time())+1)*1000
         param_str = f"api_key={self.api_key}&leverage={self.leverage}&symbol=BTCUSD&timestamp={timestamp}"
         sign=self.get_signature(param_str)
@@ -31,8 +35,9 @@ class Account:
             "timestamp":timestamp,
             "sign":sign
             }
-
+        logging.info('auth')
         r = requests.post(self.url+'/user/leverage/save', data)
+        logging.info(r.text)
         return json.loads(r.text)
 
     def place_active_order(self, side,  qty, price,stop_loss,take_profit,order_type="Limit",time_in_force='GoodTillCancel'):
@@ -54,7 +59,9 @@ class Account:
             "stop_loss": stop_loss,
             "sign":sign
             }
+        logging.info('place_active_order')
         r=requests.post(self.url+'/open-api/order/create',data)
+        logging.info(r.text)
         return json.loads(r.text)
 
     def market_close(self, side,  qty, price="",order_type="Market",time_in_force=''):
@@ -74,7 +81,9 @@ class Account:
             "time_in_force":time_in_force,
             "sign":sign
             }
+        logging.info('market_close')
         r=requests.post(self.url+'/open-api/order/create',data)
+        logging.info(r.text)
         return json.loads(r.text)
 
 
@@ -89,7 +98,9 @@ class Account:
             "timestamp":timestamp,
             "sign":sign
             }
+        logging.info('get_active_order')
         r=requests.get(self.url+'/open-api/order/list',data)
+        logging.info(r.text)
         return json.loads(r.text)
 
     def cancel_active_order(self, order_id):
@@ -104,7 +115,9 @@ class Account:
             "sign":sign,
             "order_id":order_id
             }
+        logging.info('cancel_active_order')
         r=requests.post(self.url+'/open-api/order/cancel',data)
+        logging.info(r.text)
         return json.loads(r.text)
 
 
@@ -120,7 +133,9 @@ class Account:
             "timestamp":timestamp,
             "sign":sign
             }
+        logging.info('change_leverage')
         r=requests.post(self.url+'/user/leverage/save',data)
+        logging.info(r.text)
         return json.loads(r.text)
 
     def my_position(self):
@@ -134,7 +149,9 @@ class Account:
             "timestamp":timestamp,
             "sign":sign
             }
+        logging.info('my_position')
         r=requests.get(self.url+'/position/list',data)
+        logging.info(r.text)
         return json.loads(r.text)
 
 
@@ -151,7 +168,9 @@ class Account:
             "timestamp":timestamp,
             "sign":sign
             }
+        logging.info("ticker")
         r=requests.get(self.url+'/v2/public/tickers',data)
+        logging.info(r.text)
         return json.loads(r.text)
 
 
@@ -166,7 +185,9 @@ class Account:
             "timestamp":timestamp,
             "sign":sign
             }
+        logging.info('get_orderbook')
         r=requests.get(self.url+'/v2/public/tickers',data)
+        logging.info(r.text)
         return json.loads(r.text)
 
     def replace_order(self, order_id):
@@ -181,7 +202,9 @@ class Account:
             'order_id': order_id,
             "sign":sign
             }
+        logging.info('replace_order')
         r=requests.post(self.url+'/open-api/order/replace',data)
+        logging.info(r.text)
         return json.loads(r.text)
 
     def get_leverage(self):
@@ -194,7 +217,9 @@ class Account:
             "timestamp":timestamp,
             "sign":sign
             }
+        logging.info('get_leverage')
         r=requests.get(self.url+'/user/leverage',data)
+        logging.info(r.text)
         return json.loads(r.text)
 
     def get_wallet_fund_records(self):
@@ -207,7 +232,9 @@ class Account:
             "timestamp":timestamp,
             "sign":sign
             }
+        logging.info('get_waller_fund_records')
         r=requests.get(self.url+'/open-api/wallet/fund/records',data)
+        logging.info(r.text)
         return json.loads(r.text)
 
     def get_withdraw_records(self):
@@ -220,7 +247,9 @@ class Account:
             "timestamp":timestamp,
             "sign":sign
             }
+        logging.info('get_withdraw_records')
         r=requests.get(self.url+'/open-api/wallet/withdraw/list',data)
+        logging.info(r.text)
         return json.loads(r.text)
 
     def get_the_last_funding_rate(self):
@@ -233,7 +262,9 @@ class Account:
             "timestamp":timestamp,
             "sign":sign
             }
+        logging.info('get_the_last_funding_rate')
         r=requests.get(self.url+'/open-api/funding/prev-funding-rate',data)
+        logging.info(r.text)
         return json.loads(r.text)
 
     def get_my_last_funding_fee(self):
@@ -246,7 +277,9 @@ class Account:
             "timestamp":timestamp,
             "sign":sign
             }
+        logging.info("get_my_last_funding_fee")
         r=requests.get(self.url+'/open-api/funding/prev-funding',data)
+        logging.info(r.text)
         return json.loads(r.text)
 
     def get_predicted_funding_rate_funding_fee(self):
@@ -259,7 +292,9 @@ class Account:
             "timestamp":timestamp,
             "sign":sign
             }
+        logging.info('get_predicted_funding_rate_funding_fee')
         r=requests.get(self.url+'/open-api/funding/predicted-funding',data)
+        logging.info(r.text)
         return json.loads(r.text)
 
     def get_trade_records(self):
@@ -272,7 +307,9 @@ class Account:
             "timestamp":timestamp,
             "sign":sign
             }
+        logging.info('get_trade_records')
         r=requests.get(self.url+'/v2/private/execution/list',data)
+        logging.info(r.text)
         return json.loads(r.text)
 
     def latest_info_btc(self):
@@ -285,5 +322,7 @@ class Account:
             "timestamp":timestamp,
             "sign":sign
             }
+        logging.info('get_last_info_btc')
         r=requests.get(self.url+'/v2/public/tickers',data)
+        logging.info(r.text)
         return json.loads(r.text)
