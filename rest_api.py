@@ -7,7 +7,7 @@ import hmac
 import hashlib
 import json
 import logging
-
+logger=logging.getLogger()
 logger.handlers = []
 logging.basicConfig(filename=f"{os.getcwd()}/rest_api.log",format='%(asctime)s - %(process)d-%(levelname)s - %(message)s', datefmt='%d-%b-%y %H:%M:%S', level=logging.DEBUG)
 
@@ -326,3 +326,9 @@ class Account:
         r=requests.get(self.url+'/v2/public/tickers',data)
         logging.info(r.text)
         return json.loads(r.text)
+        
+    def cancel_all_pending_order(self):
+        liste=self.get_active_order()['result']['data']
+        for x in liste:
+            if x['order_status']=='New':
+                self.cancel_active_order(x['order_id'])
