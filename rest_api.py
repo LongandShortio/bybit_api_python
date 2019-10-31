@@ -20,12 +20,12 @@ class Account:
         self.url=url
         logging.info(f'Bybit session initiated : API Key : {self.api_key}, Leverage : {self.leverage}, URL : {self.url}')
 
-    def get_signature(self,param_str):
+        def get_signature(self,param_str):
         return str(hmac.new(bytes(self.secret, "utf-8"), bytes(param_str, "utf-8"), digestmod="sha256").hexdigest())
 
     def auth(self):
         logger.info("auth")
-        timestamp=int(round(time.time())+1)*1000
+        timestamp=int(time.time() * 1000)
         param_str = f"api_key={self.api_key}&leverage={self.leverage}&symbol=BTCUSD&timestamp={timestamp}"
         sign=self.get_signature(param_str)
         data={
@@ -41,7 +41,7 @@ class Account:
         return json.loads(r.text)
 
     def place_active_order(self, side,  qty, price,stop_loss,take_profit,order_type="Limit",time_in_force='GoodTillCancel'):
-        timestamp=int(round(time.time())+1)*1000
+        timestamp=int(time.time() * 1000)
         param_str = f"api_key={self.api_key}&leverage={self.leverage}&order_type={order_type}&price={price}&qty={qty}&side={side}&stop_loss={stop_loss}&symbol=BTCUSD&take_profit={take_profit}&time_in_force={time_in_force}&timestamp={timestamp}"
         sign=self.get_signature(param_str)
         data={
@@ -65,7 +65,7 @@ class Account:
         return json.loads(r.text)
 
     def market_close(self, side,  qty, price="",order_type="Market",time_in_force=''):
-        timestamp=int(round(time.time())+1)*1000
+        timestamp=int(time.time() * 1000)
         param_str = f"api_key={self.api_key}&leverage={self.leverage}&order_type={order_type}&price={price}&qty={qty}&side={side}&symbol=BTCUSD&time_in_force={time_in_force}&timestamp={timestamp}"
         sign=self.get_signature(param_str)
         data={
@@ -88,7 +88,7 @@ class Account:
 
 
     def get_active_order(self):
-        timestamp=int(round(time.time())+1)*1000
+        timestamp=int(time.time() * 1000)
         param_str = f"api_key={self.api_key}&leverage={self.leverage}&symbol=BTCUSD&timestamp={timestamp}"
         sign=self.get_signature(param_str)
         data={
@@ -104,7 +104,7 @@ class Account:
         return json.loads(r.text)
 
     def cancel_active_order(self, order_id):
-        timestamp=int(round(time.time())+1)*1000
+        timestamp=int(time.time() * 1000)
         param_str = f"api_key={self.api_key}&leverage={self.leverage}&order_id={order_id}&symbol=BTCUSD&timestamp={timestamp}"
         sign=str(hmac.new(bytes(self.secret, "utf-8"), bytes(param_str, "utf-8"), digestmod="sha256").hexdigest())
         data={
@@ -122,7 +122,7 @@ class Account:
 
 
     def change_leverage(self, leverage,symbol="BTCUSD"):
-        timestamp=int(round(time.time())+1)*1000
+        timestamp=int(time.time() * 1000)
         self.leverage=leverage
         param_str = f"api_key={self.api_key}&leverage={self.leverage}&symbol=BTCUSD&timestamp={timestamp}"
         sign=self.get_signature(param_str)
@@ -139,7 +139,7 @@ class Account:
         return json.loads(r.text)
 
     def my_position(self):
-        timestamp=int(round(time.time())+1)*1000
+        timestamp=int(time.time() * 1000)
         param_str = f"api_key={self.api_key}&leverage={self.leverage}&symbol=BTCUSD&timestamp={timestamp}"
         sign=self.get_signature(param_str)
         data={
@@ -158,7 +158,7 @@ class Account:
 
 
     def ticker(self):
-        timestamp=int(round(time.time())+1)*1000
+        timestamp=int(time.time() * 1000)
         param_str = f"api_key={self.api_key}&leverage={self.leverage}&symbol=BTCUSD&timestamp={timestamp}"
         sign=self.get_signature(param_str)
         data={
@@ -175,7 +175,7 @@ class Account:
 
 
     def get_orderbook(self):
-        timestamp=int(round(time.time())+1)*1000
+        timestamp=int(time.time() * 1000)
         param_str = f"api_key={self.api_key}&leverage={self.leverage}&symbol=BTCUSD&timestamp={timestamp}"
         sign=self.get_signature(param_str)
         data={
@@ -191,7 +191,7 @@ class Account:
         return json.loads(r.text)
 
     def replace_order(self, order_id):
-        timestamp=int(round(time.time())+1)*1000
+        timestamp=int(time.time() * 1000)
         param_str = f"api_key={self.api_key}&leverage={self.leverage}&order_id={order_id}&symbol=BTCUSD&timestamp={timestamp}"
         sign=self.get_signature(param_str)
         data={
@@ -208,7 +208,7 @@ class Account:
         return json.loads(r.text)
 
     def get_leverage(self):
-        timestamp=int(round(time.time())+1)*1000
+        timestamp=int(time.time() * 1000)
         param_str = f"api_key={self.api_key}&symbol=BTCUSD&timestamp={timestamp}"
         sign=self.get_signature(param_str)
         data={
@@ -223,7 +223,7 @@ class Account:
         return json.loads(r.text)
 
     def get_wallet_fund_records(self):
-        timestamp=int(round(time.time())+1)*1000
+        timestamp=int(time.time() * 1000)
         param_str = f"api_key={self.api_key}&symbol=BTCUSD&timestamp={timestamp}"
         sign=self.get_signature(param_str)
         data={
@@ -238,7 +238,7 @@ class Account:
         return json.loads(r.text)
 
     def get_withdraw_records(self):
-        timestamp=int(round(time.time())+1)*1000
+        timestamp=int(time.time() * 1000)
         param_str = f"api_key={self.api_key}&symbol=BTCUSD&timestamp={timestamp}"
         sign=self.get_signature(param_str)
         data={
@@ -253,7 +253,7 @@ class Account:
         return json.loads(r.text)
 
     def get_the_last_funding_rate(self):
-        timestamp=int(round(time.time())+1)*1000
+        timestamp=int(time.time() * 1000)
         param_str = f"api_key={self.api_key}&symbol=BTCUSD&timestamp={timestamp}"
         sign=self.get_signature(param_str)
         data={
@@ -268,7 +268,7 @@ class Account:
         return json.loads(r.text)
 
     def get_my_last_funding_fee(self):
-        timestamp=int(round(time.time())+1)*1000
+        timestamp=int(time.time() * 1000)
         param_str = f"api_key={self.api_key}&symbol=BTCUSD&timestamp={timestamp}"
         sign=self.get_signature(param_str)
         data={
@@ -283,7 +283,7 @@ class Account:
         return json.loads(r.text)
 
     def get_predicted_funding_rate_funding_fee(self):
-        timestamp=int(round(time.time())+1)*1000
+        timestamp=int(time.time() * 1000)
         param_str = f"api_key={self.api_key}&symbol=BTCUSD&timestamp={timestamp}"
         sign=self.get_signature(param_str)
         data={
@@ -298,7 +298,7 @@ class Account:
         return json.loads(r.text)
 
     def get_trade_records(self):
-        timestamp=int(round(time.time())+1)*1000
+        timestamp=int(time.time() * 1000)
         param_str = f"api_key={self.api_key}&symbol=BTCUSD&timestamp={timestamp}"
         sign=self.get_signature(param_str)
         data={
@@ -313,7 +313,7 @@ class Account:
         return json.loads(r.text)
 
     def latest_info_btc(self):
-        timestamp=int(round(time.time())+1)*1000
+        timestamp=int(time.time() * 1000)
         param_str = f"api_key={self.api_key}&symbol=BTCUSD&timestamp={timestamp}"
         sign=self.get_signature(param_str)
         data={
@@ -326,9 +326,12 @@ class Account:
         r=requests.get(self.url+'/v2/public/tickers',data)
         logging.info(r.text)
         return json.loads(r.text)
-        
+
     def cancel_all_pending_order(self):
-        liste=self.get_active_order()['result']['data']
-        for x in liste:
-            if x['order_status']=='New':
-                self.cancel_active_order(x['order_id'])
+        try:
+            liste=self.get_active_order()['result']['data']
+            for x in liste:
+                if x['order_status']=='New':
+                    self.cancel_active_order(x['order_id'])
+        except:
+            pass
