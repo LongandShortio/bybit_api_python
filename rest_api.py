@@ -335,3 +335,22 @@ class Account:
                     self.cancel_active_order(x['order_id'])
         except:
             pass
+        
+    def get_kline(self, symbol="BTCUSD", interval=360, limit=200):
+        timestamp=int(time.time() * 1000)
+        _from=int(time.time()-60*interval*limit)
+        param_str = f"api_key={self.api_key}&symbol={symbol}&interval={interval}&from={_from}&limit={limit}&timestamp={timestamp}"
+        sign=self.get_signature(param_str)
+        data={
+            "api_key":self.api_key,
+            "symbol":symbol,
+            "timestamp":timestamp,
+            "interval": interval,
+            "from":_from,
+            "limit": limit,
+            "sign":sign
+            }
+        logging.info('get_kline')
+        r=requests.get(self.url+'/v2/public/kline/list',data)
+        logging.info(r.text)
+        return json.loads(r.text)
